@@ -3,6 +3,8 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Friend Finder</title>
+		<script type="text/javascript" src="https://code.jquery.com/jquery.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	</head>
 	<body>
@@ -15,7 +17,7 @@
 			<input type="text" name="" id="photo-link" class="form-control" required>
 			<h4>Question 1</h4>
 			<h5>My mind is always buzzing with new plans and ideas.</h5>
-			<select class="chosen-select" id="q1">
+			<select class="user-select" id="q1">
 				<option disabled selected value="">Choose your answer</option>
 				<option value="5">Always</option>
 				<option value="4">Usually</option>
@@ -26,7 +28,7 @@
 			
 			<h4>Question 2</h4>
 			<h5>I rely on my experience more than my imagination.</h5>
-			<select class="chosen-select" id="q2">
+			<select class="user-select" id="q2">
 				<option disabled selected value="">Choose your answer</option>
 				<option value="5">Always</option>
 				<option value="4">Usually</option>
@@ -36,7 +38,7 @@
 			</select>
 			<h4>Question 3</h4>
 			<h5>I find it easy to stay calm and focused under pressure.</h5>
-			<select class="chosen-select" id="q3">
+			<select class="user-select" id="q3">
 				<option disabled selected value="">Choose your answer</option>
 				<option value="5">Always</option>
 				<option value="4">Usually</option>
@@ -46,7 +48,7 @@
 			</select>
 			<h4>Question 4</h4>
 			<h5>I am easily annoyed.</h5>
-			<select class="chosen-select" id="q4">
+			<select class="user-select" id="q4">
 				<option disabled selected value="">Choose your answer</option>
 				<option value="5">Always</option>
 				<option value="4">Usually</option>
@@ -56,7 +58,7 @@
 			</select>
 			<h4>Question 5</h4>
 			<h5>I enjoy experimenting out of sheer curiosity.</h5>
-			<select class="chosen-select" id="q5">
+			<select class="user-select" id="q5">
 				<option disabled selected value="">Choose your answer</option>
 				<option value="5">Always</option>
 				<option value="4">Usually</option>
@@ -66,7 +68,7 @@
 			</select>
 			<h4>Question 6</h4>
 			<h5>I have a hard time understanding other people's feelings.</h5>
-			<select class="chosen-select" id="q6">
+			<select class="user-select" id="q6">
 				<option disabled selected value="">Choose your answer</option></a>
 				<option value="5">Always</option>
 				<option value="4">Usually</option>
@@ -76,7 +78,7 @@
 			</select>
 			<h4>Question 7</h4>
 			<h5>In discussions, honesty is more important than sensitivity.</h5>
-			<select class="chosen-select" id="q7">
+			<select class="user-select" id="q7">
 				<option disabled selected value="">Choose your answer</option>
 				<option value="5">Always</option>
 				<option value="4">Usually</option>
@@ -86,7 +88,7 @@
 			</select>
 			<h4>Question 8</h4>
 			<h5>I daydream often.</h5>
-			<select class="chosen-select" id="q8">
+			<select class="user-select" id="q8">
 				<option disabled selected value="">Choose your answer</option>
 				<option value="5">Always</option>
 				<option value="4">Usually</option>
@@ -96,7 +98,7 @@
 			</select>
 			<h4>Question 9</h4>
 			<h5>I believe everyone's views should be respected regardless of facts.</h5>
-			<select class="chosen-select" id="q9">
+			<select class="user-select" id="q9">
 				<option disabled selected value="">Choose your answer</option>
 				<option value="5">Always</option>
 				<option value="4">Usually</option>
@@ -106,7 +108,7 @@
 			</select>
 			<h4>Question 10</h4>
 			<h5>I feel energized after spending time with a group of people.</h5>
-			<select class="chosen-select" id="q10">
+			<select class="user-select" id="q10">
 				<option disabled selected value="">Choose your answer</option>
 				<option value="5">Always</option>
 				<option value="4">Usually</option>
@@ -121,5 +123,75 @@
 			<br>
 			<br>
 		</div>
+		<!-- Modal -->
+		<div id="results-modal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h2 class="modal-title"><strong>Soulmate!!</strong></h2>
+					</div>
+					<div class="modal-body">
+						<h2 id="match-name"></h2>
+						<img id="match-img" src="" alt="">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer class="footer">
+			<div class="container">
+				<p><a href="/api/friends">API Friends List</a> | <a href="https://github.com/monicaj314/FriendFinder">GitHub Repo</a></p>
+			</div>
+		</footer>
+		<script type="text/javascript">
+		$("#submit").on("click", function(event) {
+		event.preventDefault();
+		function validateInput() {
+		var isValid = true;
+		$(".form-control").each(function() {
+		if ($(this).val() === "") {
+		isValid = false;
+		}
+		});
+		$(".user-select").each(function() {
+		if ($(this).val() === "") {
+		isValid = false;
+		}
+		});
+		return isValid;
+		}
+		if (validateInput()) {
+		var userData = {
+		name: $("#name").val(),
+		photo: $("#photo-link").val(),
+		points: [
+		$("#q1").val(),
+		$("#q2").val(),
+		$("#q3").val(),
+		$("#q4").val(),
+		$("#q5").val(),
+		$("#q6").val(),
+		$("#q7").val(),
+		$("#q8").val(),
+		$("#q9").val(),
+		$("#q10").val()
+		]
+		};
+		$.post("/api/friends", userData, function(data) {
+		$("#match-name").text(data.name);
+		$("#match-img").attr("src", data.photo);
+		$("#results-modal").modal("toggle");
+		});
+		} else {
+		alert("Oops! You'll need complete the form before submitting.");
+		}
+		});
+		</script>
 	</body>
+</html>
+</body>
 </html>
